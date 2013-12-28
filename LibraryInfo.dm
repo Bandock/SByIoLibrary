@@ -1,6 +1,6 @@
 /*
 
-SByIo Library V3
+SByIo Library V3 - Open Source
 By Joshua Moss (Bandock)
 
 Credits:
@@ -17,6 +17,8 @@ Danbriggs - For also suggesting use of images.
 
 Forum_account - For suggesting the use of default arguments and
 variable font width support.
+
+Contributors - For providing any bit of work to the library.
 
 You - For using this library.
 

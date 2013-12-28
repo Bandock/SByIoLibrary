@@ -465,17 +465,20 @@ ItemTextObj
 		StyleObj/hstyle
 		command
 		icon/hicon
-		// image/hcimage
+		image/hcimage
 		id
 		MenuObj/MO
 		icon/HBG
-	New(text,StyleObj/style,StyleObj/hstyle,command=null,hicon=null)
+		list/vlist
+	New(text,StyleObj/style,StyleObj/hstyle,command=null,hicon=null,vlist=null)
 		src.hstyle = hstyle
 		src.command = command
 		if(hicon != null)
 			src.hicon = new(hicon)
+			src.hcimage = image(src.hicon,src)
+			hcimage.pixel_x -= (src.hicon.Width() + hstyle.font.hspacing)
 		..(text,style,2)
-		// hcimage = image('Special.dmi',src)
+		src.vlist = vlist
 		var/AnimState/AS = new()
 		var/AnimStage/AS_S = new()
 		AS_S.SetColor(style.color)
@@ -622,7 +625,12 @@ ItemTextObj
 			color = hstyle.color.GetColor()
 			*/
 			StartAnimation("Focus")
-			src.overlays += hicon
+			if(hcimage != null)
+				if(vlist != null)
+					vlist << hcimage
+				else
+					usr << hcimage
+			// src.overlays += hicon
 			if(MO != null)
 				if(MO.cid != id)
 					if(MO.cid > 0)
@@ -635,6 +643,14 @@ ItemTextObj
 			color = style.color.GetColor()
 			*/
 			StartAnimation("Unfocus")
+			if(hcimage != null)
+				if(vlist != null)
+					for(var/mob/M in vlist)
+						if(M.client)
+							M.client.images -= hcimage
+				else
+					usr.client.images -= hcimage
+
 		Command()
 			var/list/cmd = new()
 			cmd["command"] = "[command]"
@@ -709,7 +725,7 @@ MenuObj
 		Delay()
 	proc
 		AddItem(text,command)
-			var/ItemTextObj/NI = new(text,style,hstyle,command,hicon)
+			var/ItemTextObj/NI = new(text,style,hstyle,command,hicon,null)
 			menulist += NI
 			NI.id = length(menulist)
 			NI.MO = src
