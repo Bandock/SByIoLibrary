@@ -465,7 +465,10 @@ ItemTextObj
 		StyleObj/hstyle
 		command
 		icon/hicon
-		image/hcimage
+		image
+			hcimage
+			hoimage
+			hbimage
 		id
 		MenuObj/MO
 		icon/HBG
@@ -514,6 +517,17 @@ ItemTextObj
 		else
 			TOI.ChangeText(text)
 		icon = TOI
+		if(hstyle.bgcolor != null)
+			var/icon/bicon = new('Special.dmi')
+			var/iconwidth = TOI.Width()+2+(hstyle.othickness*2)
+			var/iconheight = TOI.Height()+2+(hstyle.othickness*2)
+			bicon.Scale(iconwidth,iconheight)
+			bicon.DrawBox("#FFF",1,1,iconwidth,iconheight)
+			hbimage = image(bicon,src)
+			hbimage.layer = layer-1
+			hbimage.color = hstyle.bgcolor
+			hbimage.pixel_x -= (hstyle.othickness*2)
+			hbimage.pixel_y -= (hstyle.othickness*2)
 		/*
 		var/icon/NTOI = new('Special.dmi')
 		var/lines = 1
@@ -630,7 +644,11 @@ ItemTextObj
 					vlist << hcimage
 				else
 					usr << hcimage
-			// src.overlays += hicon
+			if(hbimage != null)
+				if(vlist != null)
+					vlist << hbimage
+				else
+					usr << hbimage
 			if(MO != null)
 				if(MO.cid != id)
 					if(MO.cid > 0)
@@ -650,6 +668,13 @@ ItemTextObj
 							M.client.images -= hcimage
 				else
 					usr.client.images -= hcimage
+			if(hbimage != null)
+				if(vlist != null)
+					for(var/mob/M in vlist)
+						if(M.client)
+							M.client.images -= hbimage
+				else
+					usr.client.images -= hbimage
 
 		Command()
 			var/list/cmd = new()
@@ -667,10 +692,11 @@ MenuObj
 		icon/hicon
 		keyboardonly
 		spacingmode
+		vlist
 		cid = 0
 		list
 			menulist = new()
-	New(StyleObj/style,StyleObj/hstyle,hspacing,vspacing,hicon,keyboardonly,spacingmode)
+	New(StyleObj/style,StyleObj/hstyle,hspacing,vspacing,hicon,keyboardonly,spacingmode,vlist)
 		src.style = style
 		src.hstyle = hstyle
 		src.hspacing = hspacing
@@ -678,6 +704,7 @@ MenuObj
 		src.hicon = new(hicon)
 		src.keyboardonly = keyboardonly
 		src.spacingmode = spacingmode
+		src.vlist = vlist
 		if(src.keyboardonly > 1)
 			src.keyboardonly = 1
 		else if(src.keyboardonly < 0)
@@ -725,7 +752,7 @@ MenuObj
 		Delay()
 	proc
 		AddItem(text,command)
-			var/ItemTextObj/NI = new(text,style,hstyle,command,hicon,null)
+			var/ItemTextObj/NI = new(text,style,hstyle,command,hicon,vlist)
 			menulist += NI
 			NI.id = length(menulist)
 			NI.MO = src
