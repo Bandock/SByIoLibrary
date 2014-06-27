@@ -16,9 +16,10 @@ SPanimScript
 			if(tpos == 0)
 				if(statename != "")
 					States[statename] = AS
-				statename = copytext(data,cpos,nlpos)
-				AS = new()
-				Stage = new()
+				if(statement != "\n" && statement != "")
+					statename = copytext(data,cpos,nlpos)
+					AS = new()
+					Stage = new()
 			else
 				cpos = tpos + 1
 				var/spos = findtext(data," ",cpos,nlpos)
@@ -37,11 +38,29 @@ SPanimScript
 							Stage.SetLoop(value)
 						else if(varname == "time")
 							Stage.SetTime(value)
+					else if(lowertext(varname) == "color")
+						cpos = spos + 1
+						var/r = 0
+						var/g = 0
+						var/b = 0
+						spos = findtext(data," ",cpos,nlpos)
+						if(spos != 0)
+							token = copytext(data,cpos,spos)
+							r = text2num(token)
+							cpos = spos + 1
+							spos = findtext(data," ",cpos,nlpos)
+							if(spos != 0)
+								token = copytext(data,cpos,spos)
+								g = text2num(token)
+								cpos = spos + 1
+								token = copytext(data,cpos,nlpos)
+								b = text2num(token)
+								var/ColorObj/CO = new(r,g,b)
+								Stage.SetColor(CO)
 				else
 					var/token = copytext(data,cpos,nlpos)
 					if(token == "addstage")
 						AS.AddStage(Stage)
-						world.log << "Stage added."
 						Stage = new()
 			if(nlpos != 0)
 				cpos = nlpos + 1

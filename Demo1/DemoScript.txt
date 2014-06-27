@@ -16,3 +16,12 @@ SByIoTextFX
 	alpha 255
 	time 5
 	addstage
+
+DemoTextFX
+	color 255 255 0
+	time 5
+	loop -1
+	addstage
+	color 255 0 0
+	time 5
+	addstage

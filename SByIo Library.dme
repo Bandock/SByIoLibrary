@@ -17,7 +17,6 @@
 #include "SPanimScript.dm"
 #include "Demo1\Demo.dm"
 #include "Demo1\Styles.dm"
-#include "Documentation\SPanimScript Manual.dm"
 #ifdef __MAIN__ // BEGIN_DEMO
 #include "DemoInt.dmf"
 #endif          // END_DEMO
