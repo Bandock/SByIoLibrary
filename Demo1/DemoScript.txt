@@ -1,0 +1,18 @@
+IntroFadeIn
+	alpha 255
+	time 20
+	addstage
+
+IntroFadeOut
+	alpha 0
+	time 10
+	addstage
+
+SByIoTextFX
+	alpha 0
+	time 5
+	loop -1
+	addstage
+	alpha 255
+	time 5
+	addstage
